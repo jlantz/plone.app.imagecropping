@@ -35,6 +35,18 @@ class CroppingEditor(BrowserView):
         img_fields = self.image_fields()
         return len(img_fields) > 0 and img_fields[0].__name__
 
+    def exclude_scales(self, scales):
+        excluded = []
+        if self._editor_settings.excluded_scales:
+            for scale in self._editor_settings.excluded_scales.split(','):
+                excluded.append(scale)
+        if excluded:
+            for scale in excluded:
+                if scales.has_key(scale):
+                    del scales[scale]
+                
+        return scales
+
     def scales(self):
         """Returns information to initialize JCrop for all available scales
            on the current content with the given fieldname and interface."""
@@ -43,12 +55,14 @@ class CroppingEditor(BrowserView):
         croputils = IImageCroppingUtils(self.context)
         cropview = self.context.restrictedTraverse('@@crop-image')
         image_size = croputils.get_image_size(self.fieldname, self.interface)
-        all_sizes = getAllowedSizes()
+        all_sizes = self.exclude_scales(getAllowedSizes())
+        scale_names = all_sizes.keys()
+        scale_names.sort()
         current_selected = self.request.get('scalename', all_sizes.keys()[0])
         # TODO: implement other imagefields
         large_image_url = self.image_url(self.fieldname)
 
-        for index, size in enumerate(all_sizes):
+        for size in scale_names:
             scale = dict()
             # scale jcrop config
             min_width, min_height = self._min_size(image_size, all_sizes[size])
