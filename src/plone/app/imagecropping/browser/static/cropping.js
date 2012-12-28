@@ -46,10 +46,13 @@ if (jQuery) {
             };
         jQuery.extend(jcrop_config, config);
 
-        $('#coords img.cropbox').attr('src', config["data-imageURL"]);
-        $('#coords img.cropbox').width(config["origWidth"]);
-        $('#coords img.cropbox').height(config["origHeight"]);
-        $('#scalename').val(scale_name);
+        var cropbox = $('#coords img.cropbox');
+        if (cropbox.length > 0) {
+            cropbox.attr('src', config["data-imageURL"]);
+            cropbox.width(config["origWidth"]);
+            cropbox.height(config["origHeight"]);
+            $('#scalename').val(scale_name);
+        }
 
         var jcrop_api = $('#coords img.cropbox').data('Jcrop');
         if (jcrop_api != undefined) {
