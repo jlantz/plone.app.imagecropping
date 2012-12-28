@@ -12,7 +12,8 @@ from zope.interface.declarations import providedBy
 HAS_DEXTERITY = False
 try:
     from plone.namedfile.interfaces import IImageScaleTraversable
-    from zope.app.file.interfaces import IImage
+    from plone.namedfile.interfaces import IImage
+    #from zope.app.file.interfaces import IImage
     HAS_DEXTERITY = True
 except:
     pass
